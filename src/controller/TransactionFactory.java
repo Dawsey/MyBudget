@@ -19,8 +19,8 @@ public class TransactionFactory {
     }
     
     public static Transaction getTransaction(String date, String amount, String currency, String category) { 
-        while()
-	if("expense".equalsIgnoreCase(type)) return new Expense(tr.getString(date), amount, currency, category);
+       
+	if("expense".equalsIgnoreCase(type)) return new Expense(date, amount, currency, category);
 	else if("income".equalsIgnoreCase(type)) return new Income(date, amount, currency, category);
 	return null;
 		
