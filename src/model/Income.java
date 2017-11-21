@@ -2,12 +2,12 @@ package model;
 
 public class Income extends Transaction{
 
-	public Income(double amount, String formattedDate, String category) {
-		super(amount, formattedDate, category);
+	public Income(String date, String amount, String currency, String category) {
+		super(date, amount, currency, category);
 	}
 
 	@Override
-	public double getTransactionAmount() {
+	public String getTransactionAmount() {
 		return amount;
 	}
 

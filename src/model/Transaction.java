@@ -3,29 +3,31 @@ package model;
 
 public abstract class Transaction {
 	
-	String formattedDate;
-	public double amount;
-        private String category;
+	protected String date;
+	protected String amount;
+        protected String currency;
+        protected String category;
 
 	
-	public Transaction(double amount, String formattedDate, String category) {
-		this.formattedDate = formattedDate;
+	public Transaction(String date, String amount, String currency, String category) {
+		this.date = date;
 		this.amount = amount;
+                this.currency = currency;
                 this.category = category;
 				
 	}
 	
-	public void setTransactionAmount(double amount) {
+	public void setTransactionAmount(String amount) {
 		this.amount = amount;
 	}
-	public void setTransactionDate(String formattedDate) {
-		this.formattedDate = formattedDate;
+	public void setTransactionDate(String date) {
+		this.date = date;
 	}
 	
-	public abstract double getTransactionAmount();
+	public abstract String getTransactionAmount();
 	
 	public String getTransactionDate() {
-		return formattedDate;
+		return date;
 	}
 	
 	

@@ -26,7 +26,7 @@ public class TransactionHistory {
 	public double calculateBalance() {
 		double balance = 0;
 		for(Transaction t: transactions) {
-			balance += t.getTransactionAmount();		
+			//balance += t.getTransactionAmount();		
 		}
 		return balance;
 	}

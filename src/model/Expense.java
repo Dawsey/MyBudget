@@ -2,13 +2,13 @@ package model;
 
 public class Expense extends Transaction{
 
-	public Expense(double amount, String formattedDate, String category) {
-		super(amount, formattedDate, category);	
+	public Expense(String date, String amount, String currency, String category) {
+		super(date, amount, currency, category);
 	}
 
 	@Override
-	public double getTransactionAmount() {
-		return -amount;
+	public String getTransactionAmount() {
+		return "-" + amount;
 	}
 
 }

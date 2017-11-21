@@ -6,10 +6,6 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
-
-
-
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -59,6 +55,7 @@ public class Transaction extends javax.swing.JFrame {
             rs = pst.executeQuery();
             
             table_data.setModel(DbUtils.resultSetToTableModel(rs));
+            jComboBox_category.setEnabled(true);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }finally {
@@ -143,8 +140,7 @@ public class Transaction extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("AppleGothic", 0, 13)); // NOI18N
         jLabel14.setText("Other");
 
-        jComboBox_currency.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SWE", "USD", "EURO", "TR" }));
-        jComboBox_currency.setSelectedIndex(-1);
+        jComboBox_currency.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SWE" }));
         jComboBox_currency.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox_currencyActionPerformed(evt);
@@ -437,6 +433,7 @@ public class Transaction extends javax.swing.JFrame {
 
     private void jRadioButton_ExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_ExpenseActionPerformed
         trType = "Expense";
+        jComboBox_category.setEnabled(true);
     }//GEN-LAST:event_jRadioButton_ExpenseActionPerformed
 
     private void btn_newActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_newActionPerformed
@@ -449,11 +446,13 @@ public class Transaction extends javax.swing.JFrame {
 
     private void jRadioButton_IncomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_IncomeActionPerformed
         trType = "Income";
+        jComboBox_category.setEnabled(false);
     }//GEN-LAST:event_jRadioButton_IncomeActionPerformed
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
         java.util.Date date_validate = jDateChooser.getDate();
         String amount_validate = txt_amount.getText();
+        String comboCategory = "";
         
         if(date_validate == null) {
             JOptionPane.showMessageDialog(null, "PLEASE ENTER DATE");
@@ -463,8 +462,10 @@ public class Transaction extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "PLEASE ENTER TRANSACTION AMOUNT");
         }else if(jComboBox_currency.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(null, "PLEASE ENTER CURRENCY");
-        }else if(jComboBox_category.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(null, "PLEASE ENTER CATEGORY");
+        }else if(jComboBox_category.isEnabled()) {
+            if(jComboBox_category.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(null, "PLEASE ENTER CATEGORY");
+            }
         }else {
             try {
                 String sql = "insert into transaction (DOT, Type, Amount, Currency, Category)values(?,?,?,?,?)";
@@ -480,20 +481,18 @@ public class Transaction extends javax.swing.JFrame {
 
                 String comboCurrency = jComboBox_currency.getSelectedItem().toString();
                 pst.setString(4, comboCurrency);
-                
-                //if(jRadioButton_Income.isSelected()){
-                    //jComboBox_category.setEditable(false);
-                //} else {
-                    String comboCategory = jComboBox_category.getSelectedItem().toString();
+
+                if(trType.equals("Income")) {
+                    pst.setString(5, "Salary");
+
+                }else{
+                    comboCategory = jComboBox_category.getSelectedItem().toString();
                     pst.setString(5, comboCategory);
-                //}
-                
+                }
 
                 pst.execute();
 
                 JOptionPane.showMessageDialog(null, "Data Saved Successfully.");
-
-
 
             } catch (Exception e) {   
                 JOptionPane.showMessageDialog(null, e);
@@ -647,8 +646,6 @@ public class Transaction extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox_category;
     private javax.swing.JComboBox<String> jComboBox_currency;
     private com.toedter.calendar.JDateChooser jDateChooser;
-    private javax.swing.JDesktopPane jDesktopPane2;
-    private javax.swing.JDesktopPane jDesktopPane3;
     private javax.swing.JDesktopPane jDesktopPane4;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -656,8 +653,6 @@ public class Transaction extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel8;
