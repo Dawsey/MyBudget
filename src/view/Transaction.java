@@ -1,3 +1,5 @@
+package view;
+
 
 import controller.MysqlConnect;
 import java.sql.Connection;
@@ -32,6 +34,7 @@ public class Transaction extends javax.swing.JFrame {
         
         updateTable();
         
+        btn_save.setEnabled(false);       
         jRadioButton1.setSelected(false);
         jRadioButton1.setVisible(false);
         txt_id.setVisible(false);
@@ -104,8 +107,8 @@ public class Transaction extends javax.swing.JFrame {
         btn_new = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
         btn_update = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        btn_delete = new javax.swing.JButton();
+        btn_clear = new javax.swing.JButton();
         jTextField7 = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -324,9 +327,19 @@ public class Transaction extends javax.swing.JFrame {
             }
         });
 
-        jButton6.setText("Delete");
+        btn_delete.setText("Delete");
+        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deleteActionPerformed(evt);
+            }
+        });
 
-        jButton7.setText("Clear");
+        btn_clear.setText("Clear");
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
 
         jLabel19.setText("SEARCH");
 
@@ -346,9 +359,9 @@ public class Transaction extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -356,8 +369,8 @@ public class Transaction extends javax.swing.JFrame {
             .addComponent(btn_new, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
             .addComponent(btn_save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btn_update, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btn_delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btn_clear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -438,6 +451,11 @@ public class Transaction extends javax.swing.JFrame {
 
     private void btn_newActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_newActionPerformed
         clearFields();
+        btn_save.setEnabled(true);
+        btn_new.setEnabled(false);
+        btn_update.setEnabled(false);
+        btn_delete.setEnabled(false);
+        btn_clear.setEnabled(false);
     }//GEN-LAST:event_btn_newActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -506,6 +524,11 @@ public class Transaction extends javax.swing.JFrame {
         }
         updateTable();
         clearFields();
+        btn_save.setEnabled(false);
+        btn_new.setEnabled(true);
+        btn_update.setEnabled(true);
+        btn_delete.setEnabled(true);
+        btn_clear.setEnabled(true);
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void table_dataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_dataMouseClicked
@@ -525,10 +548,11 @@ public class Transaction extends javax.swing.JFrame {
                 String strtype = rs.getString("Type");
                 if("Income".equals(strtype)){
                     jRadioButton_Income.setSelected(true);
+                    jComboBox_category.setEnabled(false);
                 } else if("Expense".equals(strtype)){
                     jRadioButton_Expense.setSelected(true);
                 }
-                 
+                
                 String stramount = rs.getString("Amount");
                 txt_amount.setText(stramount);
                 
@@ -550,6 +574,11 @@ public class Transaction extends javax.swing.JFrame {
                 } catch (Exception e) {
                 }
         }
+        btn_save.setEnabled(false);
+        btn_new.setEnabled(true);
+        btn_update.setEnabled(true);
+        btn_delete.setEnabled(true);
+        btn_clear.setEnabled(true);
     }//GEN-LAST:event_table_dataMouseClicked
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
@@ -564,6 +593,7 @@ public class Transaction extends javax.swing.JFrame {
                 
                 if(jRadioButton_Income.isSelected()){
                     pst.setString(2, "Income");
+                    pst.setString(4, "salary");
                 }else if(jRadioButton_Expense.isSelected()){
                     pst.setString(2, "Expense");
                 }
@@ -578,6 +608,7 @@ public class Transaction extends javax.swing.JFrame {
                 //} else {
                     String comboCategory = jComboBox_category.getSelectedItem().toString();
                     pst.setString(5, comboCategory);
+                   
                 //}
                 
                 pst.setString(6, txt_id.getText());
@@ -599,6 +630,38 @@ public class Transaction extends javax.swing.JFrame {
             }
             updateTable();        
     }//GEN-LAST:event_btn_updateActionPerformed
+
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+        if(txt_id.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "PLEASE SELECT DATA TO DELETE");
+        } else {
+            int p = JOptionPane.showConfirmDialog(null, "DO YOU REALLY WANT TO DELETE", "Delete", JOptionPane.YES_NO_OPTION);
+            
+            if(p == 0) {
+                try {
+                    String sql = "delete from transaction where Transaction_ID=?";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, txt_id.getText());
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Deleted Successfully");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e);
+                } finally {
+                    try {
+                        rs.close();
+                        pst.close();
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        }
+        clearFields();
+        updateTable();
+    }//GEN-LAST:event_btn_deleteActionPerformed
+
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        clearFields();
+    }//GEN-LAST:event_btn_clearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -636,13 +699,13 @@ public class Transaction extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_clear;
+    private javax.swing.JButton btn_delete;
     private javax.swing.JButton btn_new;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_update;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JComboBox<String> jComboBox_category;
     private javax.swing.JComboBox<String> jComboBox_currency;
     private com.toedter.calendar.JDateChooser jDateChooser;
