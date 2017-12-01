@@ -109,7 +109,7 @@ public class Transaction extends javax.swing.JFrame {
         btn_update = new javax.swing.JButton();
         btn_delete = new javax.swing.JButton();
         btn_clear = new javax.swing.JButton();
-        jTextField7 = new javax.swing.JTextField();
+        txt_search = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         table_data = new javax.swing.JTable();
@@ -199,8 +199,7 @@ public class Transaction extends javax.swing.JFrame {
             }
         });
 
-        jComboBox_category.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Rent", "Transportation", "Groceries", "Eat Out", "Clothes", "Entertainment" }));
-        jComboBox_category.setSelectedIndex(-1);
+        jComboBox_category.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Salary", "Rent", "Transportation", "Groceries", "Eat Out", "Clothes", "Entertainment" }));
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setText("r3");
@@ -341,6 +340,17 @@ public class Transaction extends javax.swing.JFrame {
             }
         });
 
+        txt_search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_searchActionPerformed(evt);
+            }
+        });
+        txt_search.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_searchKeyReleased(evt);
+            }
+        });
+
         jLabel19.setText("SEARCH");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -351,7 +361,7 @@ public class Transaction extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel19)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_search, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_new, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -374,7 +384,7 @@ public class Transaction extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addComponent(jTextField7)
+            .addComponent(txt_search)
         );
 
         jPanel5.add(jPanel6);
@@ -446,7 +456,8 @@ public class Transaction extends javax.swing.JFrame {
 
     private void jRadioButton_ExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_ExpenseActionPerformed
         trType = "Expense";
-        jComboBox_category.setEnabled(true);
+        //jComboBox_category.setEnabled(true);
+        
     }//GEN-LAST:event_jRadioButton_ExpenseActionPerformed
 
     private void btn_newActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_newActionPerformed
@@ -464,7 +475,8 @@ public class Transaction extends javax.swing.JFrame {
 
     private void jRadioButton_IncomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton_IncomeActionPerformed
         trType = "Income";
-        jComboBox_category.setEnabled(false);
+        //jComboBox_category.setEnabled(false);
+        //jComboBox_category.setSelectedIndex(-1);
     }//GEN-LAST:event_jRadioButton_IncomeActionPerformed
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
@@ -480,10 +492,9 @@ public class Transaction extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "PLEASE ENTER TRANSACTION AMOUNT");
         }else if(jComboBox_currency.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(null, "PLEASE ENTER CURRENCY");
-        }else if(jComboBox_category.isEnabled()) {
-            if(jComboBox_category.getSelectedItem() == null) {
+        }else if(jComboBox_category.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(null, "PLEASE ENTER CATEGORY");
-            }
+           
         }else {
             try {
                 String sql = "insert into transaction (DOT, Type, Amount, Currency, Category)values(?,?,?,?,?)";
@@ -513,6 +524,7 @@ public class Transaction extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Data Saved Successfully.");
 
             } catch (Exception e) {   
+                System.out.println(e.getMessage());
                 JOptionPane.showMessageDialog(null, e);
             }finally {
                 try {
@@ -551,6 +563,7 @@ public class Transaction extends javax.swing.JFrame {
                     jComboBox_category.setEnabled(false);
                 } else if("Expense".equals(strtype)){
                     jRadioButton_Expense.setSelected(true);
+                    jComboBox_category.setEnabled(true);
                 }
                 
                 String stramount = rs.getString("Amount");
@@ -603,13 +616,14 @@ public class Transaction extends javax.swing.JFrame {
                 String comboCurrency = jComboBox_currency.getSelectedItem().toString();
                 pst.setString(4, comboCurrency);
                 
-                //if(jRadioButton_Income.isSelected()){
-                  //  jComboBox_category.setEditable(false);
-                //} else {
+                if(jRadioButton_Income.isSelected()){
+                    jComboBox_category.setSelectedItem(0);
+                    pst.setString(5, "Salary");
+                } else {
                     String comboCategory = jComboBox_category.getSelectedItem().toString();
                     pst.setString(5, comboCategory);
                    
-                //}
+                }
                 
                 pst.setString(6, txt_id.getText());
 
@@ -662,6 +676,32 @@ public class Transaction extends javax.swing.JFrame {
     private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
         clearFields();
     }//GEN-LAST:event_btn_clearActionPerformed
+
+    private void txt_searchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_searchKeyReleased
+        String temp = txt_search.getText()+"%";
+        String sql = "select * from transaction where Type like'"+temp+"'OR DOT like'"+temp+"'OR Category like'"+temp+"'";
+        try{
+            pst=conn.prepareStatement(sql);
+            rs=pst.executeQuery();
+            table_data.setModel(DbUtils.resultSetToTableModel(rs));
+
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,e );
+
+        }finally {
+            try {
+                rs.close();
+                pst.close();
+            } catch (Exception e) {
+            }
+        }
+
+
+    }//GEN-LAST:event_txt_searchKeyReleased
+
+    private void txt_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_searchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_searchActionPerformed
 
     /**
      * @param args the command line arguments
@@ -730,10 +770,10 @@ public class Transaction extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTable table_data;
     private javax.swing.JTextField txt_amount;
     private javax.swing.JTextField txt_id;
+    private javax.swing.JTextField txt_search;
     // End of variables declaration//GEN-END:variables
 
 

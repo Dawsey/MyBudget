@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.Income;
+import model.Expense;
 import model.Transaction;
 
 /**
@@ -73,7 +74,7 @@ public class TransactionDAO {
                     return incomeList;
                 }
                 if(rs.getString("Type").equals("Expense")) {
-                    Transaction tr = new Income(rs.getString("date"), rs.getString("amount"), rs.getString("currency"), rs.getString("category"));
+                    Transaction tr = new Expense(rs.getString("date"), rs.getString("amount"), rs.getString("currency"), rs.getString("category"));
                     expenseList.add(tr);
                     return expenseList;
                 }

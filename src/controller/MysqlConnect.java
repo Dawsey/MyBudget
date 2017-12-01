@@ -19,7 +19,7 @@ public class MysqlConnect {
         try {
             Class.forName("com.mysql.jdbc.Driver"); // loading the driver
             
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/budgetdb","root","root");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/budgetdb","root","root");
             //JOptionPane.showMessageDialog(null, "Connection Successful");
             
             return conn;
